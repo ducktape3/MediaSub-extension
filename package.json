@@ -1,0 +1,23 @@
+{
+  "name": "mediasub-extension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ducktape3/MediaSub-extension.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ducktape3/MediaSub-extension/issues"
+  },
+  "homepage": "https://github.com/ducktape3/MediaSub-extension#readme",
+  "description": "",
+  "devDependencies": {
+    "serve": "^14.2.5"
+  }
+}

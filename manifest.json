@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "MediaSub Player",
+    "version": "1.0.0",
+    "description": "Local media player with subtitle support",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "MediaSub Player"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "play-pause": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Space",
+                "mac": "Command+Shift+Space"
+            },
+            "description": "Play or pause media"
+        },
+        "toggle-pip": {
+            "suggested_key": {
+                "default": "Alt+P",
+                "mac": "Option+P"
+            },
+            "description": "Toggle Picture-in-Picture"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}
