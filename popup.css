@@ -18,7 +18,6 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
-    width: 600px; /* Default width for popup */
     height: 400px; /* Default height for popup */
     overflow: hidden;
 }
@@ -47,6 +46,8 @@ body {
     text-align: center;
     border: 2px dashed var(--surface-color);
     margin: 20px;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
     border-radius: 8px;
     transition: border-color 0.3s;
 }
