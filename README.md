@@ -1,4 +1,4 @@
-# MediaSub Player - Chrome Extension
+# MediaSub Player - Chrome Extension [PROTOTYPE]
 
 A local media player for Chrome with subtitle support (.srt, .vtt), Picture-in-Picture mode, and modern playback controls.
 
