@@ -7,18 +7,21 @@ export class SubtitleManager {
         this.offset = 0; // in seconds
     }
 
+    // Reads a subtitle File and returns its cues. Does not touch the overlay,
+    // so it can be used where no overlay exists (e.g. the popup for web pages).
+    async parseFile(file) {
+        // Normalise line endings and strip a UTF-8 BOM: Windows .srt files use CRLF,
+        // which the block parser below would otherwise reject.
+        const text = (await file.text()).replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+
+        if (file.name.endsWith('.srt')) return this.parseSRT(text);
+        if (file.name.endsWith('.vtt')) return this.parseVTT(text);
+        console.error('Unsupported subtitle format');
+        return [];
+    }
+
     async load(file) {
-        const text = await file.text();
-        this.cues = [];
-        
-        if (file.name.endsWith('.srt')) {
-            this.cues = this.parseSRT(text);
-        } else if (file.name.endsWith('.vtt')) {
-            this.cues = this.parseVTT(text);
-        } else {
-            console.error('Unsupported subtitle format');
-        }
-        
+        this.cues = await this.parseFile(file);
         this.overlay.classList.add('active');
         console.log(`Loaded ${this.cues.length} subtitle cues`);
     }
