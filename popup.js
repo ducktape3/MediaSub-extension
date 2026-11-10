@@ -220,7 +220,69 @@ class MediaPlayer {
     }
 }
 
+// Web-page subtitles: parse the file here (ES modules are allowed in the popup),
+// then hand plain cue data to content.js running in the active tab.
+const PAGE_MESSAGE = (type, payload = {}) => ({ type: `mediasub:${type}`, ...payload });
+
+async function sendToActiveTab(message) {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab || tab.id === undefined) throw new Error('No active tab found.');
+
+    try {
+        return await chrome.tabs.sendMessage(tab.id, message);
+    } catch {
+        // The content script is not on this page yet (it is injected on demand, not on every page).
+        await chrome.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            files: ['content.js']
+        });
+        return await chrome.tabs.sendMessage(tab.id, message);
+    }
+}
+
+function setWebStatus(text, isError = false) {
+    const el = document.getElementById('web-status');
+    el.textContent = text;
+    el.classList.toggle('error', isError);
+}
+
+function initWebSubtitles() {
+    const input = document.getElementById('web-subtitle-input');
+    const parser = new SubtitleManager(null);
+
+    input.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        e.target.value = ''; // allow choosing the same file again
+        if (!file) return;
+
+        if (!/\.(srt|vtt)$/i.test(file.name)) {
+            setWebStatus('Choose a .srt or .vtt file.', true);
+            return;
+        }
+
+        try {
+            const cues = await parser.parseFile(file);
+            if (cues.length === 0) {
+                setWebStatus(`No subtitle cues found in ${file.name}.`, true);
+                return;
+            }
+            const res = await sendToActiveTab(PAGE_MESSAGE('load', { cues, name: file.name }));
+            if (!res || !res.ok) throw new Error('The page did not accept the subtitles.');
+            setWebStatus(
+                `${cues.length} cues loaded from ${file.name}. ` +
+                (res.videos > 0
+                    ? `Found ${res.videos} video${res.videos === 1 ? '' : 's'} on this page.`
+                    : 'No video found on this page yet. Subtitles show once one plays.')
+            );
+        } catch (err) {
+            console.error('Web subtitle load failed:', err);
+            setWebStatus(`Could not load subtitles on this page: ${err.message}`, true);
+        }
+    });
+}
+
 // Initialize
 window.addEventListener('DOMContentLoaded', () => {
     new MediaPlayer();
+    initWebSubtitles();
 });

@@ -24,6 +24,16 @@ A local media player for Chrome with subtitle support (.srt, .vtt), Picture-in-P
 4. Use **P** for Picture-in-Picture mode.
 5. Use **Space** to Play/Pause.
 
+## Subtitles for Videos on Web Pages
+1. Open a page with a video and let it load.
+2. Click the extension icon and choose **Load Subtitles for Page Video**.
+3. Pick an `.srt` or `.vtt` file. Subtitles appear over the page's video, follow seeks, and stay in fullscreen.
+
+Notes:
+- The extension only runs on a page when you load subtitles there (via `activeTab`). It does not read or change pages in the background.
+- Subtitles stay until you reload the page.
+- Subtitles are drawn over the video, so they are not visible in Picture-in-Picture windows.
+
 ## Keyboard Shortcuts
 - **Space**: Play/Pause
 - **Arrow Left/Right**: Seek -/+ 10s
